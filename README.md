@@ -6,4 +6,4 @@
 а также создает файл с расширением .gv<br/>
 который преобразуется в .png картинку при помощи программы Graphviz
 > Команда для исполнения в Linux имеет вид:<br/>
-> gcc test.c -o test.out; ./test.out; dot -Tpng graph.gv -o graph.png && sxiv graph.png<br/>
+> gcc homework2.c -o hw2.out; ./hw2.out; dot -Tpng graph.gv -o graph.png && sxiv graph.png
