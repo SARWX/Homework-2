@@ -45,7 +45,6 @@ int main() {
         printf("%d|", i);
     printf("\n");
 
-
     getchar();
     for(i = 0; i < Knots; i++) {
         printf("%s\t|", knot[i].name);
