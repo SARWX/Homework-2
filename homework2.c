@@ -76,7 +76,6 @@ int main() {
     fprintf(file, "graph HomeWork {\n");
     for (j = 0; j < Edges; j++) {
         for (i = 0; i < Knots; i++) {
-//            printf("%d.%d)  %d -- trig = %d\n", j, i, knot[i].edge[j], trig);
             if (knot[i].edge[j] == 1) {
                 if (trig == 0) {
                     fprintf(file, "\t%s -- ", knot[i].name);
