@@ -16,7 +16,8 @@ int power(int n, int pow) {   // возводит n в степень pow
 
 int main() {
     int Knots = 0, Edges = 0;
-    int i, j;
+    int connected = 0, unconnected = 0;
+    int i, j, k;
 
     printf("Input the number of your knots: ");
     scanf("%d", &Knots);
@@ -25,6 +26,7 @@ int main() {
     scanf("%d", &Edges);
                 printf("%d", Edges);
 
+    int *uncon = calloc(Knots, (sizeof(int) * Edges)); //Массив не связных вершин
     struct Knot *knot;      // Объявили указатель на структуру
     knot = (struct Knot *) calloc(Knots, sizeof(struct Knot *) + (sizeof(int) * Edges)*Knots);        // Задали число массивов
     if(!knot) {
@@ -48,7 +50,7 @@ int main() {
     for(i = 0; i < Knots; i++) {
         printf("%s\t|", knot[i].name);
 
-        knot[i].edge = (int*) calloc(Edges, sizeof(int)); // calloc почемуто сжирает место у соседей, а malloc выделяет в другом месте
+        knot[i].edge = (int*) calloc(Edges, sizeof(int));
         if(!knot[i].edge) {
             printf ("Allocation failure.");
             exit (1);
@@ -58,9 +60,14 @@ int main() {
             int x = (getchar() - '0');
             knot[i].edge[j] = x;
             getchar();
+            connected += x;
         }
+        if (connected == 0) {
+            uncon[unconnected] = i;  //запоминаем несвязные вершины
+            unconnected++;    
+        }
+        connected = 0;
     }
-
 // Пишем файл
     int trig = 0;
 
@@ -80,12 +87,16 @@ int main() {
                     fprintf(file, "%s\n", knot[i].name);
                     trig = 0;
                 }
-            }
+            }      
         }
         if (trig != 0) {
             fprintf(file, "%s\n", knot[(trig-1)].name);
             trig = 0;
-        }
+        }    
+    }
+    //Пишем несвязные вершины:
+    for (i = 0; i < unconnected; i++) {
+        fprintf(file, "\t%s\n", knot[uncon[i]].name);
     }
     fprintf(file, "}");
     //Закрываем файл
@@ -94,20 +105,24 @@ int main() {
     // Проверка на связность
     int answer = 0, mask = 0;
 
-    for (i = 0; i < Knots; i++) {
-        for (j = 0; j < Edges; j++){
-            if (knot[i].edge[j] == 1)
-                mask += power(2,j); //создаем двоичную маску
-        }
-        if (((answer & mask) != 0) || (i == 0))
-            answer = answer | mask;
-        mask = 0;
-    }
-
-    if (answer == (power(2, Edges) - 1))
-        printf("\nYour graph is connected");
-    else
+    if (unconnected)
         printf("\nYour graph is not connected");
-
+    else {
+        for(k = 0; k < Knots; k++) {
+            for (i = 0; i < Knots; i++) {
+                for (j = 0; j < Edges; j++){
+                    if (knot[i].edge[j] == 1)
+                        mask += power(2,j); //создаем двоичную маску
+                }
+                if (((answer & mask) != 0) || (i == 0))
+                    answer = answer | mask;
+                mask = 0;
+            }
+        }
+        if (answer == (power(2, Edges) - 1))
+            printf("\nYour graph is connected");
+        else
+            printf("\nYour graph is not connected");
+    }
     return 0;
 }
