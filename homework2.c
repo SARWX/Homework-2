@@ -7,13 +7,6 @@ struct Knot
     int* edge;
 };
 
-int power(int n, int pow) {   // возводит n в степень pow
-    int i, answer = 1;
-    for (i = 0; i < pow; i++)
-        answer *= n;
-    return(answer);
-}
-
 int main() {
     int Knots = 0, Edges = 0;
     int connected = 0, unconnected = 0;
@@ -110,7 +103,7 @@ int main() {
             for (i = 0; i < Knots; i++) {
                 for (j = 0; j < Edges; j++){
                     if (knot[i].edge[j] == 1)
-                        mask += power(2,j); //создаем двоичную маску
+                        mask += 1 << j;
                 }
                 if (((answer & mask) != 0) || (i == 0))
                     answer = answer | mask;
